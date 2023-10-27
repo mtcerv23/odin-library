@@ -6,17 +6,10 @@ function Book(title, author, pages, read) {
   this.title = title,
   this.author = author,
   this.pages = pages,
-  this.read = read,
-  this.info = function () {
-    return `${this.title}, ${this.author}, ${this.pages}, ${this.read}`
-  }
+  this.read = read
 }
 
 function addBookToLibrary(title, author, pages, read) {
-    // let title = prompt("Title: ", "Harry Potter");
-    // let author = prompt("Author: ", "J.K. Rowling");
-    // let pages = prompt("Pages: ", 690);
-    // let read = prompt("Already read? ", "yes/no");
     let book = new Book(title, author, pages, read);
     myLibrary.push(book);
 }
