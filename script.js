@@ -9,11 +9,7 @@ function Book(title, author, pages, read) {
   this.read = read
 }
 
-function addBookToLibrary() {
-  let title = "book";
-  let author = "author";
-  let pages = 'pages';
-  let read = 'not read yet';
+function addBookToLibrary(title, author, pages, read) {
   let book = new Book(title, author, pages, read);
   myLibrary.push(book);
 }
@@ -42,11 +38,15 @@ const submit = document.getElementById('submit');
 
 submit.addEventListener("click", function(event) {
   event.preventDefault();
-  let title = document.getElementById('title');
-  let author = document.getElementById('author');
-  let pages = document.getElementById('pages');
-  let read = document.getElementById('read');
-  addBookToLibrary();
+  let title = document.getElementById('title').value;
+  let author = document.getElementById('author').value;
+  let pages = document.getElementById('pages').value;
+  let read = document.getElementById('read').checked;
+  if (read === false) {read = 'No'} else read = 'Yes';
+  if (title != '' && author != '' && pages != '') {
+    addBookToLibrary(title, author, pages, read);
+
   displayBook();
   modal.close();
-});
+  }}
+);
