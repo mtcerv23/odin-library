@@ -17,14 +17,19 @@ function addBookToLibrary(title, author, pages, read) {
 // check if the book is already in main.
 function displayBook() {
   myLibrary.forEach(book => {
-    const newDiv = document.createElement("div");
-    newDiv.innerHTML =
-      `<h1>${book.title}</h1>
-      <p><b>Author:</b> ${book.author}</p>
-      <p><b>Pages:</b> ${book.pages}</p>
-      <p><b>Already read?</b> ${book.read}</p>`;
-      main.append(newDiv);
-      alert(myLibrary);
+    let alreadyExists = document.getElementById(`${book.title}`);
+    if (!alreadyExists) {
+      let newDiv = document.createElement("div");
+      newDiv.setAttribute('id', `${book.title}`)
+      newDiv.innerHTML =
+        `<h1>${book.title}</h1>
+        <p><b>Author:</b> ${book.author}</p>
+        <p><b>Pages:</b> ${book.pages}</p>
+        <p><b>Already read?</b> ${book.read}</p>`;
+        main.append(newDiv);
+        alert
+        modal.close();
+    }
   })
 }
 
@@ -60,6 +65,5 @@ submit.addEventListener("click", function(event) {
   if (title != '' && author != '' && pages != '') {
     addBookToLibrary(title, author, pages, read);
     displayBook();
-    modal.close();
   }}
 );
