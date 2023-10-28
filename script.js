@@ -24,6 +24,7 @@ function camelize(str) {
 // check if the book is already in main.
 function displayBook() {
   myLibrary.forEach(book => {
+    console.log(book);
     titleNoSpace = book.title.replace(/ /g,'');
     let alreadyExists = document.getElementById(titleNoSpace);
     if (!alreadyExists) {
@@ -35,6 +36,7 @@ function displayBook() {
         <p><b>Pages:</b> ${book.pages}</p>
         <p><b>Already read?</b> ${book.read}</p>`;
         main.append(newDiv);
+        alert
         modal.close();
     }
   })
@@ -67,14 +69,13 @@ submit.addEventListener("click", function(event) {
   let author = document.getElementById('author').value;
   let pages = document.getElementById('pages').value;
   let read = document.getElementById('read').checked;
+  let bookNotFound = myLibrary.find(book => book.title === title) === undefined;
+
   if (read === false) {read = 'No'} else read = 'Yes';
 
-  if (title != '' && author != '' && pages != '') {
+  if (title != '' && author != '' && pages != '' && bookNotFound) {
     addBookToLibrary(title, author, pages, read);
     displayBook();
-  }}
-);
-
-function toggleRead() {
-
+  } else {} /* display error message saying book has already been added */
 }
+);
