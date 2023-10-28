@@ -14,20 +14,27 @@ function addBookToLibrary(title, author, pages, read) {
   myLibrary.push(book);
 }
 
+function camelize(str) {
+  return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+    if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
+    return index === 0 ? match.toLowerCase() : match.toUpperCase();
+  });
+}
+
 // check if the book is already in main.
 function displayBook() {
   myLibrary.forEach(book => {
-    let alreadyExists = document.getElementById(`${book.title}`);
+    titleNoSpace = book.title.replace(/ /g,'');
+    let alreadyExists = document.getElementById(titleNoSpace);
     if (!alreadyExists) {
       let newDiv = document.createElement("div");
-      newDiv.setAttribute('id', `${book.title}`)
+      newDiv.setAttribute('id', `${titleNoSpace}`)
       newDiv.innerHTML =
         `<h1>${book.title}</h1>
         <p><b>Author:</b> ${book.author}</p>
         <p><b>Pages:</b> ${book.pages}</p>
         <p><b>Already read?</b> ${book.read}</p>`;
         main.append(newDiv);
-        alert
         modal.close();
     }
   })
@@ -67,3 +74,7 @@ submit.addEventListener("click", function(event) {
     displayBook();
   }}
 );
+
+function toggleRead() {
+
+}

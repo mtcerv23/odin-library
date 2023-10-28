@@ -1,0 +1,5 @@
+Remove button
+Associate DOM elements with actual book elements. Give them a data-attribute
+
+Google:
+how to add the same function to multiple buttons javascript
