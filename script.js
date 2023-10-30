@@ -1,5 +1,6 @@
 const myLibrary = [];
 const main = document.querySelector('main');
+let libraryIndex = 0;
 
 
 function Book(title, author, pages, read) {
@@ -24,22 +25,28 @@ function camelize(str) {
 // check if the book is already in main.
 function displayBook() {
   myLibrary.forEach(book => {
-    console.log(book);
-    titleNoSpace = book.title.replace(/ /g,'');
-    let alreadyExists = document.getElementById(titleNoSpace);
-    if (!alreadyExists) {
+    let bookOnScreen = document.querySelector(`[data-index="${libraryIndex}"]`);
+    console.log(bookOnScreen);
+    // titleNoSpace = book.title.replace(/ /g,'');
+    // let alreadyExists = document.getElementById(titleNoSpace);
+    if (!bookOnScreen) {
       let newDiv = document.createElement("div");
-      newDiv.setAttribute('id', `${titleNoSpace}`)
+      // newDiv.setAttribute('id', `${titleNoSpace}`);
+      newDiv.dataset.index = myLibrary.findIndex(bookObj => bookObj.title === book.title);
       newDiv.innerHTML =
         `<h1>${book.title}</h1>
         <p><b>Author:</b> ${book.author}</p>
         <p><b>Pages:</b> ${book.pages}</p>
         <p><b>Already read?</b> ${book.read}</p>`;
-        main.append(newDiv);
-        alert
-        modal.close();
+      main.append(newDiv);
+      modal.close();
+      libraryIndex++;
     }
   })
+}
+
+function createNewDiv () {
+
 }
 
 const modal = document.querySelector("[data-modal]");
@@ -69,7 +76,7 @@ submit.addEventListener("click", function(event) {
   let author = document.getElementById('author').value;
   let pages = document.getElementById('pages').value;
   let read = document.getElementById('read').checked;
-  let bookNotFound = myLibrary.find(book => book.title === title) === undefined;
+  let bookNotFound = myLibrary.find(book => book.title === title) === undefined; // boolean for whether or not book title is found in myLibrary
 
   if (read === false) {read = 'No'} else read = 'Yes';
 
