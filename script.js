@@ -1,6 +1,6 @@
 const myLibrary = [];
 const main = document.querySelector('main');
-let libraryIndex = 0;
+let bookOnScreen;
 
 
 function Book(title, author, pages, read) {
@@ -15,38 +15,32 @@ function addBookToLibrary(title, author, pages, read) {
   myLibrary.push(book);
 }
 
-function camelize(str) {
-  return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
-    if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
-    return index === 0 ? match.toLowerCase() : match.toUpperCase();
-  });
-}
-
-// check if the book is already in main.
+// check if the book is already on screen.
 function displayBook() {
-  myLibrary.forEach(book => {
-    let bookOnScreen = document.querySelector(`[data-index="${libraryIndex}"]`);
-    console.log(bookOnScreen);
-    // titleNoSpace = book.title.replace(/ /g,'');
-    // let alreadyExists = document.getElementById(titleNoSpace);
+  myLibrary.forEach((book, index) => {
+    bookOnScreen = document.querySelector(`[data-index="${index}"]`); // check if there is already a book on screen with data-index starting from 0
+    console.log(`bookOnScreen = ${bookOnScreen}`);
+    console.log(`book index = ${index}`);
+    // if there is no book on screen with the current libraryIndex, create a div
     if (!bookOnScreen) {
       let newDiv = document.createElement("div");
-      // newDiv.setAttribute('id', `${titleNoSpace}`);
       newDiv.dataset.index = myLibrary.findIndex(bookObj => bookObj.title === book.title);
       newDiv.innerHTML =
         `<h1>${book.title}</h1>
         <p><b>Author:</b> ${book.author}</p>
         <p><b>Pages:</b> ${book.pages}</p>
         <p><b>Already read?</b> ${book.read}</p>`;
+      let deleteButton = newDiv.createElement('button');
+      deleteButton.textContent = 'Delete';
+      deleteButton.addEventListener('click', () => deleteSelf(newDiv));
       main.append(newDiv);
       modal.close();
-      libraryIndex++;
     }
   })
 }
 
-function createNewDiv () {
-
+function deleteSelf(index) {
+  document.querySelector(`[data-index="${index}"]`).remove();
 }
 
 const modal = document.querySelector("[data-modal]");
@@ -86,3 +80,4 @@ submit.addEventListener("click", function(event) {
   } else {} /* display error message saying book has already been added */
 }
 );
+
