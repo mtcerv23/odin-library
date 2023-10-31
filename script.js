@@ -26,12 +26,31 @@ function displayBook() {
         `<h1>${book.title}</h1>
         <p><b>Author:</b> ${book.author}</p>
         <p><b>Pages:</b> ${book.pages}</p>`;
-      if (book.read === false) newDiv.innerHTML += '<p><b>Not read yet</b></p>'
-      else newDiv.innerHTML += '<p><b>Already read</b></p>'
+      if (book.read === false) newDiv.innerHTML += `<p id="readstatus${index}"><b>Not read yet</b></p>`;
+      else newDiv.innerHTML += `<p id="readstatus${index}"><b>Already read</b></p>`;
+
+      // create delete button
       let deleteButton = document.createElement('button');
       deleteButton.textContent = 'Delete';
       deleteButton.addEventListener('click', () => deleteSelf(index));
       newDiv.append(deleteButton);
+
+      //create toggle read status button
+      let readButton = document.createElement('button');
+      readButton.textContent = 'Read?';
+      readButton.addEventListener('click', () => {
+        let readStatus = document.getElementById(`readstatus${index}`);
+        if (book.read === false) {
+          book.read === true;
+          readStatus.textContent = 'Already read';
+        }
+        else {
+          book.read === false;
+          readStatus.textContent = 'Not read yet';
+        }
+      });
+      newDiv.append(readButton);
+
       main.append(newDiv);
       modal.close();
     }
