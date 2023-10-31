@@ -1,6 +1,5 @@
 const myLibrary = [];
 const main = document.querySelector('main');
-let bookOnScreen;
 
 
 function Book(title, author, pages, read) {
@@ -18,21 +17,21 @@ function addBookToLibrary(title, author, pages, read) {
 // check if the book is already on screen.
 function displayBook() {
   myLibrary.forEach((book, index) => {
-    bookOnScreen = document.querySelector(`[data-index="${index}"]`); // check if there is already a book on screen with data-index starting from 0
-    console.log(`bookOnScreen = ${bookOnScreen}`);
-    console.log(`book index = ${index}`);
-    // if there is no book on screen with the current libraryIndex, create a div
-    if (!bookOnScreen) {
+    let bookOnScreen = document.querySelector(`[data-index="${index}"]`); // check if there is already a book on screen with data-index starting from 0
+    // if there is no div on screen for the current book's index, create a div
+    if (!bookOnScreen && book.title != null) {
       let newDiv = document.createElement("div");
-      newDiv.dataset.index = myLibrary.findIndex(bookObj => bookObj.title === book.title);
+      newDiv.dataset.index = index;
       newDiv.innerHTML =
         `<h1>${book.title}</h1>
         <p><b>Author:</b> ${book.author}</p>
-        <p><b>Pages:</b> ${book.pages}</p>
-        <p><b>Already read?</b> ${book.read}</p>`;
-      let deleteButton = newDiv.createElement('button');
+        <p><b>Pages:</b> ${book.pages}</p>`;
+      if (book.read === false) newDiv.innerHTML += '<p><b>Not read yet</b></p>'
+      else newDiv.innerHTML += '<p><b>Already read</b></p>'
+      let deleteButton = document.createElement('button');
       deleteButton.textContent = 'Delete';
-      deleteButton.addEventListener('click', () => deleteSelf(newDiv));
+      deleteButton.addEventListener('click', () => deleteSelf(index));
+      newDiv.append(deleteButton);
       main.append(newDiv);
       modal.close();
     }
@@ -41,6 +40,10 @@ function displayBook() {
 
 function deleteSelf(index) {
   document.querySelector(`[data-index="${index}"]`).remove();
+  myLibrary[index].title = null;
+  myLibrary[index].author = null;
+  myLibrary[index].pages = null;
+  myLibrary[index].read = null;
 }
 
 const modal = document.querySelector("[data-modal]");
@@ -70,14 +73,28 @@ submit.addEventListener("click", function(event) {
   let author = document.getElementById('author').value;
   let pages = document.getElementById('pages').value;
   let read = document.getElementById('read').checked;
-  let bookNotFound = myLibrary.find(book => book.title === title) === undefined; // boolean for whether or not book title is found in myLibrary
+  let newBook = myLibrary.find(book => book.title === title) === undefined; // returns true if book title not already in myLibrary
+  console.log(myLibrary);
 
-  if (read === false) {read = 'No'} else read = 'Yes';
-
-  if (title != '' && author != '' && pages != '' && bookNotFound) {
+  if (title != '' && author != '' && pages != '' && newBook) {
     addBookToLibrary(title, author, pages, read);
     displayBook();
   } else {} /* display error message saying book has already been added */
 }
 );
 
+// test
+
+// let objArray = [
+//   {number: 1},
+//   {number: 2},
+//   {number: 3}
+// ]
+// delete objArray[0];
+// console.log(objArray[0]);
+// console.log(objArray.find(object => object.number == 1));
+
+// let array = [1, 2, 3];
+// delete array[0];
+// console.log(array[0]);
+// console.log(array.find(number => number == 1));
