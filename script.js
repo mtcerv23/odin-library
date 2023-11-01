@@ -19,7 +19,7 @@ function displayBook() {
   myLibrary.forEach((book, index) => {
     let bookOnScreen = document.querySelector(`[data-index="${index}"]`); // check if there is already a book on screen with data-index starting from 0
     // if there is no div on screen for the current book's index, create a div
-    if (!bookOnScreen && book.title != null) {
+    if (!bookOnScreen) {
       let newDiv = document.createElement("div");
       newDiv.dataset.index = index;
       newDiv.innerHTML =
@@ -31,8 +31,9 @@ function displayBook() {
 
       // create delete button
       let deleteButton = document.createElement('button');
+      deleteButton.setAttribute('id', `delete-${index}`);
       deleteButton.textContent = 'Delete';
-      deleteButton.addEventListener('click', () => deleteSelf(index));
+      deleteButton.addEventListener('click', deleteSelf(index));
       newDiv.append(deleteButton);
 
       //create toggle read status button
@@ -59,10 +60,13 @@ function displayBook() {
 
 function deleteSelf(index) {
   document.querySelector(`[data-index="${index}"]`).remove();
-  myLibrary[index].title = null;
-  myLibrary[index].author = null;
-  myLibrary[index].pages = null;
-  myLibrary[index].read = null;
+  myLibrary.splice(index, 1);
+  let deleteButton = document.getElementById(`delete-${index + 1}`);
+  deleteButton.removeEventListener('click,', deleteSelf(index + 1));
+  deleteButton.removeEventListener('click,', deleteSelf(index));
+  for (let i = index; i < myLibrary.length; i++) {
+    document.querySelector(`[data-index="${i + 1}"]`).dataset.index = `${i}`;
+  }
 }
 
 const modal = document.querySelector("[data-modal]");
