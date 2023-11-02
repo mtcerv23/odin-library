@@ -26,30 +26,35 @@ function displayBook() {
         `<h1>${book.title}</h1>
         <p><b>Author:</b> ${book.author}</p>
         <p><b>Pages:</b> ${book.pages}</p>`;
-      if (book.read === false) newDiv.innerHTML += `<p id="readstatus${index}"><b>Not read yet</b></p>`;
-      else newDiv.innerHTML += `<p id="readstatus${index}"><b>Already read</b></p>`;
+        let readButton = document.createElement('button');
+        
+        if (book.read === false) {
+          readButton.textContent = 'Not read';
+          readButton.setAttribute('class', 'not-read');
+        }
+        else {
+          readButton.textContent = 'Read';
+          readButton.setAttribute('class', 'read');
+        }
+        readButton.addEventListener('click', () => {
+          if (readButton.textContent == 'Not read') {
+            myLibrary[index].read = true;
+            readButton.textContent = 'Read';
+            readButton.setAttribute('class', 'read');
+          } else {
+            myLibrary[index].read = false;
+            readButton.textContent = 'Not read';
+            readButton.setAttribute('class', 'not-read');
+          }}
+        )
+        newDiv.append(readButton);
 
       // create delete button
       let deleteButton = document.createElement('button');
       deleteButton.textContent = 'Delete';
-      deleteButton.addEventListener('click', deleteSelf(index));
+      deleteButton.setAttribute('id', `delete-${index}`);
+      deleteButton.addEventListener('click', () => deleteSelf(index));
       newDiv.append(deleteButton);
-
-      //create toggle read status button
-      let readButton = document.createElement('button');
-      readButton.textContent = 'Read?';
-      readButton.addEventListener('click', () => {
-        let readStatus = document.getElementById(`readstatus${index}`);
-        if (book.read === false) {
-          book.read === true;
-          readStatus.textContent = 'Already read';
-        }
-        else {
-          book.read === false;
-          readStatus.textContent = 'Not read yet';
-        }
-      });
-      newDiv.append(readButton);
 
       main.append(newDiv);
       modal.close();
@@ -58,17 +63,39 @@ function displayBook() {
 }
 
 function deleteSelf(index) {
+  console.log(`index = ${index}`);
   document.querySelector(`[data-index="${index}"]`).remove();
   myLibrary.splice(index, 1);
-  if (myLibrary.length > 1) {
+// problem: last element doesn't reassign
+
+  if (index == myLibrary.length - 1) {
     let deleteButton = document.getElementById(`delete-${index + 1}`);
-  deleteButton.removeEventListener('click,', deleteSelf(index + 1));
-  deleteButton.addEventListener('click,', deleteSelf(index));
+    deleteButton.setAttribute('id', `delete-${index}`);
+    deleteButton.addEventListener('click,', () => deleteSelf(index));
+    document.querySelector(`[data-index="${index + 1}"]`).dataset.index = `${index}`;
   }
-  for (let i = index; i < myLibrary.length; i++) {
-    console.log(document.querySelector(`[data-index="${i + 1}"]`).dataset.index);
-    document.querySelector(`[data-index="${i + 1}"]`).dataset.index = `${i}`;
+  else if (myLibrary.length > 1 && index < myLibrary.length - 1) {
+    let deleteButton = document.getElementById(`delete-${index + 1}`);
+    deleteButton.setAttribute('id', `delete-${index}`);
+    deleteButton.addEventListener('click,', () => deleteSelf(index)); // problem: keeping old event listener?? then i don't fucking know what to do
+    for (let i = index; i < myLibrary.length; i++) {
+      document.querySelector(`[data-index="${i + 1}"]`).dataset.index = `${i}`;
+    }
+  } else if (myLibrary.length == 0) {
+    if (index === 1) {
+      let deleteButton = document.getElementById(`delete-1`);
+      deleteButton.setAttribute('id', `delete-0`);
+      deleteButton.addEventListener('click,', () => deleteSelf(0));
+      document.querySelector(`[data-index="1"]`).dataset.index = '0';
+    } else {
+      let deleteButton = document.getElementById(`delete-1`);
+      deleteButton.setAttribute('id', `delete-0`);
+      deleteButton.addEventListener('click,', () => deleteSelf(0));
+      document.querySelector(`[data-index="1"]`).dataset.index = '0';
+    }
   }
+
+
 }
 
 const modal = document.querySelector("[data-modal]");
@@ -110,16 +137,15 @@ submit.addEventListener("click", function(event) {
 
 // test
 
-// let objArray = [
-//   {number: 1},
-//   {number: 2},
-//   {number: 3}
-// ]
-// delete objArray[0];
-// console.log(objArray[0]);
-// console.log(objArray.find(object => object.number == 1));
+// let div = document.createElement('div');
+// div.setAttribute('id', 'div1');
+// div.style.border = '1px solid blue';
+// let deleteButton = document.createElement('button');
+// deleteButton.textContent = 'Delete';
+// deleteButton.addEventListener('click', () => deleteElementAndThisChildNodes('div1'));
+// div.appendChild(deleteButton);
+// document.body.appendChild(div);
 
-// let array = [1, 2, 3];
-// delete array[0];
-// console.log(array[0]);
-// console.log(array.find(number => number == 1));
+// function deleteElementAndThisChildNodes(parentId) {
+//   document.getElementById(parentId).remove();
+// }
