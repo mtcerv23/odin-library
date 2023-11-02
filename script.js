@@ -31,7 +31,6 @@ function displayBook() {
 
       // create delete button
       let deleteButton = document.createElement('button');
-      deleteButton.setAttribute('id', `delete-${index}`);
       deleteButton.textContent = 'Delete';
       deleteButton.addEventListener('click', deleteSelf(index));
       newDiv.append(deleteButton);
@@ -61,10 +60,13 @@ function displayBook() {
 function deleteSelf(index) {
   document.querySelector(`[data-index="${index}"]`).remove();
   myLibrary.splice(index, 1);
-  let deleteButton = document.getElementById(`delete-${index + 1}`);
+  if (myLibrary.length > 1) {
+    let deleteButton = document.getElementById(`delete-${index + 1}`);
   deleteButton.removeEventListener('click,', deleteSelf(index + 1));
-  deleteButton.removeEventListener('click,', deleteSelf(index));
+  deleteButton.addEventListener('click,', deleteSelf(index));
+  }
   for (let i = index; i < myLibrary.length; i++) {
+    console.log(document.querySelector(`[data-index="${i + 1}"]`).dataset.index);
     document.querySelector(`[data-index="${i + 1}"]`).dataset.index = `${i}`;
   }
 }
