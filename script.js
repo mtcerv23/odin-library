@@ -1,7 +1,6 @@
 const myLibrary = [];
 const main = document.querySelector('main');
 
-
 function Book(title, author, pages, read) {
   this.title = title,
   this.author = author,
@@ -26,27 +25,32 @@ function displayBook() {
         `<h1>${book.title}</h1>
         <p><b>Author:</b> ${book.author}</p>
         <p><b>Pages:</b> ${book.pages}</p>`;
+
+        // create read button
         let readButton = document.createElement('button');
         
         if (book.read === false) {
-          readButton.textContent = 'Not read';
-          readButton.setAttribute('class', 'not-read');
+          readButton.textContent = 'Not Read';
+          readButton.setAttribute('class', 'not-read read-button');
         }
         else {
           readButton.textContent = 'Read';
-          readButton.setAttribute('class', 'read');
+          readButton.setAttribute('class', 'read read-button');
         }
+
+        // toggle between Read and Not Read
         readButton.addEventListener('click', () => {
-          if (readButton.textContent == 'Not read') {
+          if (readButton.textContent === 'Not Read') {
             myLibrary[index].read = true;
             readButton.textContent = 'Read';
-            readButton.setAttribute('class', 'read');
+            readButton.setAttribute('class', 'read read-button');
           } else {
             myLibrary[index].read = false;
-            readButton.textContent = 'Not read';
-            readButton.setAttribute('class', 'not-read');
-          }}
-        )
+            readButton.textContent = 'Not Read';
+            readButton.setAttribute('class', 'not-read read-button');
+          }
+        });
+
         newDiv.append(readButton);
 
       // create delete button
@@ -62,40 +66,54 @@ function displayBook() {
   })
 }
 
+// delete button functionality
 function deleteSelf(index) {
   console.log(`index = ${index}`);
+  if (index < myLibrary.length - 1) {
+    for (let i = index; i < myLibrary.length - 1; i++) {
+      console.log(`myLibrary[${i}].read = ${myLibrary[i].read}`);
+      let nextDiv = document.querySelector(`[data-index="${i + 1}"]`);
+      nextDiv.dataset.index = `${i}`;
+
+      let deleteButton = document.getElementById(`delete-${i + 1}`);
+      nextDiv.removeChild(deleteButton);
+
+      // removes and creates new read button because I don't know how to replace the event handler lol
+      nextDiv.querySelector('.read-button').remove(); 
+      let newReadButton = document.createElement('button');
+
+      if (myLibrary[i + 1].read === true) {
+        newReadButton.textContent = 'Read';
+        newReadButton.setAttribute('class', 'read read-button');
+      } else {
+        newReadButton.textContent = 'Not Read';
+        newReadButton.setAttribute('class', 'not-read read-button')
+      };
+
+      newReadButton.addEventListener('click', () => {
+        if (newReadButton.textContent === 'Not Read') {
+          myLibrary[i].read = true;
+          newReadButton.textContent = 'Read';
+          newReadButton.setAttribute('class', 'read read-button');
+        } else if (newReadButton.textContent === 'Read') {
+          myLibrary[i].read = false;
+          newReadButton.textContent = 'Not Read';
+          newReadButton.setAttribute('class', 'not-read read-button');
+        }
+      });
+
+      nextDiv.append(newReadButton);
+
+      // new Delete Button
+      let newDeleteButton = document.createElement('button');
+      newDeleteButton.textContent = 'Delete';
+      newDeleteButton.setAttribute('id', `delete-${i}`);
+      newDeleteButton.setAttribute("onclick", `deleteSelf(${i})`);
+      nextDiv.appendChild(newDeleteButton);
+    }
+  }
   document.querySelector(`[data-index="${index}"]`).remove();
   myLibrary.splice(index, 1);
-// problem: last element doesn't reassign
-
-  if (index == myLibrary.length - 1) {
-    let deleteButton = document.getElementById(`delete-${index + 1}`);
-    deleteButton.setAttribute('id', `delete-${index}`);
-    deleteButton.addEventListener('click,', () => deleteSelf(index));
-    document.querySelector(`[data-index="${index + 1}"]`).dataset.index = `${index}`;
-  }
-  else if (myLibrary.length > 1 && index < myLibrary.length - 1) {
-    let deleteButton = document.getElementById(`delete-${index + 1}`);
-    deleteButton.setAttribute('id', `delete-${index}`);
-    deleteButton.addEventListener('click,', () => deleteSelf(index)); // problem: keeping old event listener?? then i don't fucking know what to do
-    for (let i = index; i < myLibrary.length; i++) {
-      document.querySelector(`[data-index="${i + 1}"]`).dataset.index = `${i}`;
-    }
-  } else if (myLibrary.length == 0) {
-    if (index === 1) {
-      let deleteButton = document.getElementById(`delete-1`);
-      deleteButton.setAttribute('id', `delete-0`);
-      deleteButton.addEventListener('click,', () => deleteSelf(0));
-      document.querySelector(`[data-index="1"]`).dataset.index = '0';
-    } else {
-      let deleteButton = document.getElementById(`delete-1`);
-      deleteButton.setAttribute('id', `delete-0`);
-      deleteButton.addEventListener('click,', () => deleteSelf(0));
-      document.querySelector(`[data-index="1"]`).dataset.index = '0';
-    }
-  }
-
-
 }
 
 const modal = document.querySelector("[data-modal]");
@@ -103,21 +121,8 @@ const addBook = document.getElementById('add-book');
 const cancel = document.getElementById('cancel');
 const submit = document.getElementById('submit');
 
-addBook.onclick = () => {
-  modal.showModal()
-}
-
-function resetForm() {
-  document.getElementById('title').value = null;
-  document.getElementById('author').value = null;
-  document.getElementById('pages').value = null;
-  document.getElementById('read').checked = false;
-}
-
-cancel.addEventListener('click', () => {
-  resetForm();
-  modal.close();
-})
+addBook.addEventListener('click', () => modal.showModal());
+cancel.addEventListener('click', () => modal.close());
 
 submit.addEventListener("click", function(event) {
   event.preventDefault();
@@ -129,23 +134,11 @@ submit.addEventListener("click", function(event) {
   console.log(myLibrary);
 
   if (title != '' && author != '' && pages != '' && newBook) {
+    document.getElementById('already-added').textContent = '';
     addBookToLibrary(title, author, pages, read);
     displayBook();
-  } else {} /* display error message saying book has already been added */
+  } else { /* display error message saying book has already been added */
+    document.getElementById('already-added').textContent = 'Book already in library';
+  } 
 }
 );
-
-// test
-
-// let div = document.createElement('div');
-// div.setAttribute('id', 'div1');
-// div.style.border = '1px solid blue';
-// let deleteButton = document.createElement('button');
-// deleteButton.textContent = 'Delete';
-// deleteButton.addEventListener('click', () => deleteElementAndThisChildNodes('div1'));
-// div.appendChild(deleteButton);
-// document.body.appendChild(div);
-
-// function deleteElementAndThisChildNodes(parentId) {
-//   document.getElementById(parentId).remove();
-// }
