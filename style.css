@@ -1,24 +1,64 @@
-main {
+body {
+    margin: 0;
+}
+
+.header {
+    font-size: 5rem;
+    background-color: rgb(196, 196, 196);
+    font-family: 'Roboto';
+    text-align: center;
+    padding: 10px;
+}
+
+.content {
+    position: relative;
+    padding: 50px;
+    padding-top: 100px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
-    gap: 50px;
+    gap: 100px;
     justify-items: center;
     font-family: 'Roboto';
 }
 
-main > div {
-    border: 1px solid red;
+.book {
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid rgb(173, 173, 173);
+    background-color: rgba(182, 182, 182, 0.171);
     width: 300px;
     min-width: 200px;
     /* text-align: justify; */
     /* display: grid;
     justify-content: center; */
+    position: relative;
 }
 
 #add-book {
-    position: absolute;
-    top: 50px;
-    right: 50px;
+    position: fixed;
+    top: 50vh;
+    right: 100px;
+    background-color: blue;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    color: white;
+}
+
+.read,
+.not-read {
+    width: 100px;
+}
+
+.read,
+.not-read,
+.delete {
+    border: none;
+    border-radius: 15px;
+    font-size: 1rem;
+    padding: 10px 10px;
+    font-weight: bold;
 }
 
 .read {
@@ -28,6 +68,13 @@ main > div {
 
 .not-read {
     background-color: rgb(255, 90, 90);
+}
+
+.delete {
+    background-color: red;
+    position: absolute;
+    right: 25px;
+    padding: 10px 20px;
 }
 
 #already-added {

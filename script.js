@@ -1,5 +1,5 @@
 const myLibrary = [];
-const main = document.querySelector('main');
+const content = document.querySelector('.content');
 
 function Book(title, author, pages, read) {
   this.title = title,
@@ -20,6 +20,7 @@ function displayBook() {
     // if there is no div on screen for the current book's index, create a div
     if (!bookOnScreen) {
       let newDiv = document.createElement("div");
+      newDiv.setAttribute('class', 'book');
       newDiv.dataset.index = index;
       newDiv.innerHTML =
         `<h1>${book.title}</h1>
@@ -57,10 +58,11 @@ function displayBook() {
       let deleteButton = document.createElement('button');
       deleteButton.textContent = 'Delete';
       deleteButton.setAttribute('id', `delete-${index}`);
+      deleteButton.setAttribute('class', 'delete');
       deleteButton.addEventListener('click', () => deleteSelf(index));
       newDiv.append(deleteButton);
 
-      main.append(newDiv);
+      content.append(newDiv);
       modal.close();
     }
   })
@@ -108,6 +110,7 @@ function deleteSelf(index) {
       let newDeleteButton = document.createElement('button');
       newDeleteButton.textContent = 'Delete';
       newDeleteButton.setAttribute('id', `delete-${i}`);
+      newDeleteButton.setAttribute('class', 'delete');
       newDeleteButton.setAttribute("onclick", `deleteSelf(${i})`);
       nextDiv.appendChild(newDeleteButton);
     }
